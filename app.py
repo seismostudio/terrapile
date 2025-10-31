@@ -114,7 +114,6 @@ def main() -> None:
             st.header("Soil Layer Along Pile Shaft")
             st.caption(f"Analysis Method: {method}")
 
-
             n_layers = st.number_input("Number of Layer", min_value=0, step=1)
 
             layers: List[SoilLayer] = []
@@ -211,56 +210,56 @@ def main() -> None:
                                     phi=phi
                                 )
                             )
-        st.divider()
-        run = st.button("Run")
+            st.divider()
+            run = st.button("Run")
 
-        if run:
-            try:
-                # Initialize pile_material for Decourt-Quaresma (not used but needed for function call)
-                if method == "Decourt-Quaresma":
-                    pile_material = None
-                
-                validate_inputs(method, diameter_m, pile_depth_m, cutoff_m, fs, dz, layers)
-                df, recap = compute_distributions(method, diameter_m, pile_depth_m, cutoff_m, fs, pile_material, pile_types, dz, layers)
-                # simpan hasil single-pile agar persisten antar rerun
-                st.session_state["single_df"] = df
-                st.session_state["single_recap"] = recap
-
-
-                st.subheader("Summary")
-                colA, colB, colC, colD = st.columns(4)
-                colA.metric("Ab (m²)", f"{recap['Ab_m2']:.4f}")
-                colA.metric("Perimeter (m)", f"{recap['Perimeter_m']:.3f}")
-                colB.metric("Pile Length (m)", f"{recap['Pilelength_m']:.2f}")            
-                colB.metric("Cut-off Pile (m)", f"{recap['Cutoff_m']:.2f}")
-                colC.metric("Qb @tip (kN)", f"{recap['Qb_at_tip_kN']:.1f}")
-                colC.metric("Qfs total (kN)", f"{recap['Qfs_total_kN']:.1f}")
-                colD.metric("Qult total (kN)", f"{recap['Qult_total_kN']:.1f}")
-                colD.metric("Qall total (kN)", f"{recap['Qall_total_kN']:.1f}")
-
-                col1A, col2A = st.columns(2)
-                plot_height = 800
-                with col1A:
-                    st.subheader("Depth vs Qall")
-                    fig1 = plot_depth_vs_qall(df)
-                    fig1.update_layout(height=plot_height)
-                    st.plotly_chart(fig1, width="stretch")
-
-                    st.subheader("Depth vs Qfs, Qb, Qult, Qall")
-                    fig2 = plot_depth_vs_components(df)
-                    fig2.update_layout(height=plot_height)
-                    st.plotly_chart(fig2, width="stretch")
-
-                with col2A:
-                    st.subheader("Soil Profile")
-                    fig3 = plot_soil_profile(layers, pile_depth_m, cutoff_m)
-                    fig3.update_layout(height=plot_height)
-                    st.plotly_chart(fig3, width="stretch")
-
-                    st.subheader("Summary Data")
-                    st.dataframe(df, width="stretch", height=800, hide_index=True)
-            except Exception as exc:
-                st.error(str(exc))
+            if run:
+                try:
+                    # Initialize pile_material for Decourt-Quaresma (not used but needed for function call)
+                    if method == "Decourt-Quaresma":
+                        pile_material = None
+                    
+                    validate_inputs(method, diameter_m, pile_depth_m, cutoff_m, fs, dz, layers)
+                    df, recap = compute_distributions(method, diameter_m, pile_depth_m, cutoff_m, fs, pile_material, pile_types, dz, layers)
+                    # simpan hasil single-pile agar persisten antar rerun
+                    st.session_state["single_df"] = df
+                    st.session_state["single_recap"] = recap
+    
+    
+                    st.subheader("Summary")
+                    colA, colB, colC, colD = st.columns(4)
+                    colA.metric("Ab (m²)", f"{recap['Ab_m2']:.4f}")
+                    colA.metric("Perimeter (m)", f"{recap['Perimeter_m']:.3f}")
+                    colB.metric("Pile Length (m)", f"{recap['Pilelength_m']:.2f}")            
+                    colB.metric("Cut-off Pile (m)", f"{recap['Cutoff_m']:.2f}")
+                    colC.metric("Qb @tip (kN)", f"{recap['Qb_at_tip_kN']:.1f}")
+                    colC.metric("Qfs total (kN)", f"{recap['Qfs_total_kN']:.1f}")
+                    colD.metric("Qult total (kN)", f"{recap['Qult_total_kN']:.1f}")
+                    colD.metric("Qall total (kN)", f"{recap['Qall_total_kN']:.1f}")
+    
+                    col1A, col2A = st.columns(2)
+                    plot_height = 800
+                    with col1A:
+                        st.subheader("Depth vs Qall")
+                        fig1 = plot_depth_vs_qall(df)
+                        fig1.update_layout(height=plot_height)
+                        st.plotly_chart(fig1, width="stretch")
+    
+                        st.subheader("Depth vs Qfs, Qb, Qult, Qall")
+                        fig2 = plot_depth_vs_components(df)
+                        fig2.update_layout(height=plot_height)
+                        st.plotly_chart(fig2, width="stretch")
+    
+                    with col2A:
+                        st.subheader("Soil Profile")
+                        fig3 = plot_soil_profile(layers, pile_depth_m, cutoff_m)
+                        fig3.update_layout(height=plot_height)
+                        st.plotly_chart(fig3, width="stretch")
+    
+                        st.subheader("Summary Data")
+                        st.dataframe(df, width="stretch", height=800, hide_index=True)
+                except Exception as exc:
+                    st.error(str(exc))
 
         else:
             st.subheader(f"Coming Soon, {method}'s Method is Under Developement..")
