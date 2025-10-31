@@ -111,7 +111,7 @@ def main() -> None:
         #INPUT
         if method=="Decourt-Quaresma" or method == "Mayerhof":
 
-            st.header("Soil Layer Along Pile Shaft"):
+            st.header("Soil Layer Along Pile Shaft")
             st.caption(f"Analysis Method: {method}")
 
 
