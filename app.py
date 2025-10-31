@@ -12,11 +12,11 @@ from axpile.geometry import (
     compute_pile_tip_area_m2_from_diameter
 )
 # Load your Supabase keys (aman kalau nanti kamu pakai secrets)
-# SUPABASE_URL = st.secrets["SUPABASE_URL"]
-# SUPABASE_KEY = st.secrets["SUPABASE_KEY"]
+SUPABASE_URL = st.secrets["SUPABASE_URL"]
+SUPABASE_KEY = st.secrets["SUPABASE_KEY"]
 
-SUPABASE_URL = os.getenv("SUPABASE_URL")
-SUPABASE_KEY = os.getenv("SUPABASE_KEY")
+#SUPABASE_URL = os.getenv("SUPABASE_URL")
+#SUPABASE_KEY = os.getenv("SUPABASE_KEY")
 
 supabase = create_client(SUPABASE_URL, SUPABASE_KEY)
 
