@@ -55,7 +55,7 @@ def main() -> None:
                     supabase.auth.sign_out()
                     del st.session_state["user"]
                     st.rerun()
-        col2.link_button("Docs ↗", "https://streamlit.io/gallery", width="stretch")
+        col2.link_button("Docs ↗", "https://streamlit.io/gallery")
 
     tab1, tab2 = st.tabs(["Single Pile Analysis","Group Pile Analysis"])
     with tab1:
