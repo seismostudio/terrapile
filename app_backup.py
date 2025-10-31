@@ -231,32 +231,52 @@ def main() -> None:
                 n_pile = col1.number_input("Number of Piles", min_value=1, step=1, key=f"n_pile_{g}")
                 w_pilecap = col2.number_input("Width of PileCap", min_value=0.0, format="%.2f", key=f"w_pilecap_{g}")
                 l_pilecap = col3.number_input("Length of PileCap", min_value=0.0, format="%.2f", key=f"l_pilecap_{g}")
-
-                # --- INPUT KOORDINAT MANUAL UNTUK SETIAP PILE ---
                 import pandas as pd
-                pile_data = []
+                state_key = f"group_{g}_df"
+                if state_key not in st.session_state:
+                    st.session_state[state_key] = pd.DataFrame({
+                        "Pile Number": list(range(1, int(n_pile) + 1)),
+                        "X (m)": [0.0] * int(n_pile),
+                        "Y (m)": [0.0] * int(n_pile),
+                    })
+                else:
+                    df = st.session_state[state_key]
+                    current_rows = len(df)
+                    target_rows = int(n_pile)
+                    if target_rows != current_rows:
+                        new_df = pd.DataFrame({
+                            "Pile Number": list(range(1, target_rows + 1)),
+                            "X (m)": [0.0] * target_rows,
+                            "Y (m)": [0.0] * target_rows,
+                        })
+                        rows_to_copy = min(current_rows, target_rows)
+                        if rows_to_copy > 0:
+                            new_df.loc[:rows_to_copy - 1, ["X (m)", "Y (m)"]] = df.loc[:rows_to_copy - 1, ["X (m)", "Y (m)"]].values
+                        st.session_state[state_key] = new_df
 
-                st.subheader("Pile Coordinates")
-                for i in range(1, int(n_pile) + 1):
-                    with st.container():
-                        colx, coly = st.columns(2)
-                        x = colx.number_input(f"X pile #{i} (m)", value=0.0, format="%.3f", key=f"x_{g}_{i}")
-                        y = coly.number_input(f"Y pile #{i} (m)", value=0.0, format="%.3f", key=f"y_{g}_{i}")
-                        pile_data.append({"Pile Number": i, "X (m)": x, "Y (m)": y})
-
-                # Simpan hasil input ke session_state sebagai DataFrame (agar tetap kompatibel dgn plot)
-                df_piles = pd.DataFrame(pile_data)
-                st.session_state[f"group_{g}_df"] = df_piles
-
-                # --- VISUALISASI LAYOUT ---
+                df_to_edit = st.session_state[state_key]
+                edited = st.data_editor(
+                    df_to_edit,
+                    num_rows="fixed",
+                    use_container_width=True,
+                    column_config={
+                        "Pile Number": st.column_config.NumberColumn(disabled=True),
+                        "X (m)": st.column_config.NumberColumn(format="%.3f"),
+                        "Y (m)": st.column_config.NumberColumn(format="%.3f"),
+                    },
+                    key=f"editor_group_{g}"
+                )
+                st.session_state[state_key] = edited
+                
+                # Visualization below the table
                 st.subheader("Pilecap Layout")
                 fig_layout = plot_pilecap_layout(
-                    df_piles,
-                    width_m=w_pilecap,
-                    length_m=l_pilecap,
+                    edited,
+                    width_m=st.session_state.get(f"w_pilecap_{g}", 0.0),
+                    length_m=st.session_state.get(f"l_pilecap_{g}", 0.0),
                     pile_diameter_m=st.session_state.get("pile_diameter_m", 0.0),
                 )
-                st.plotly_chart(fig_layout, use_container_width=True)
+                st.plotly_chart(fig_layout, width="stretch")
 
         # --- PILE GROUP EFFICIENCY CALCULATION ---
         st.divider()
