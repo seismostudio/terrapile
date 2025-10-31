@@ -26,7 +26,7 @@ def main() -> None:
 
     with st.sidebar:
         col1, col2 = st.columns(2)
-        with col1.popover("Login", width="stretch"):
+        with col1.popover("Login"):
             st.title("Login to TerraPile")
 
             # Kalau belum login
