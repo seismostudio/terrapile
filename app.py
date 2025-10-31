@@ -111,156 +111,156 @@ def main() -> None:
         #INPUT
         if method=="Decourt-Quaresma" or method == "Mayerhof":
 
-            with st.expander("Soil Layer Along Pile Shaft", expanded=True):
-                st.caption(f"Analysis Method: {method}")
+            st.header("Soil Layer Along Pile Shaft"):
+            st.caption(f"Analysis Method: {method}")
 
 
-                n_layers = st.number_input("Number of Layer", min_value=0, step=1)
+            n_layers = st.number_input("Number of Layer", min_value=0, step=1)
 
-                layers: List[SoilLayer] = []
-                for i in range(int(n_layers)):
-                    with st.expander(f"Layer #{i+1}", expanded=True):
-                        col1, col2, col3, col4= st.columns(4)
-                        thickness = col1.number_input(
-                            f"Thickness #{i+1} (m)", min_value=0.0, format="%.1f", key=f"th_{i}"
+            layers: List[SoilLayer] = []
+            for i in range(int(n_layers)):
+                with st.expander(f"Layer #{i+1}", expanded=True):
+                    col1, col2, col3, col4= st.columns(4)
+                    thickness = col1.number_input(
+                        f"Thickness #{i+1} (m)", min_value=0.0, format="%.1f", key=f"th_{i}"
+                    )
+
+                    # DECOURT-QUARESMA METHOD INPUT
+                    if method=="Decourt-Quaresma":
+                        soil_behavior = col2.selectbox(
+                            f"Soil Behavior #{i+1}", options=SoilBehavior, key=f"behavior_{i}"
+                        )                
+                        soil_type = col3.selectbox(
+                            f"Soil Type #{i+1}", options=SoilType[soil_behavior], key=f"type_{i}"
                         )
-
-                        # DECOURT-QUARESMA METHOD INPUT
-                        if method=="Decourt-Quaresma":
-                            soil_behavior = col2.selectbox(
-                                f"Soil Behavior #{i+1}", options=SoilBehavior, key=f"behavior_{i}"
-                            )                
-                            soil_type = col3.selectbox(
-                                f"Soil Type #{i+1}", options=SoilType[soil_behavior], key=f"type_{i}"
+                        if soil_behavior == "clay":
+                            nspt=col4.number_input(
+                                f"NSPT #{i+1}", min_value=1, key=f"nspt_{i}"
                             )
-                            if soil_behavior == "clay":
-                                nspt=col4.number_input(
-                                    f"NSPT #{i+1}", min_value=1, key=f"nspt_{i}"
+                            layers.append(
+                                SoilLayer(
+                                    thickness_m=thickness,
+                                    soil_behavior=soil_behavior,
+                                    soil_type=soil_type,
+                                    nspt=nspt
                                 )
-                                layers.append(
-                                    SoilLayer(
-                                        thickness_m=thickness,
-                                        soil_behavior=soil_behavior,
-                                        soil_type=soil_type,
-                                        nspt=nspt
-                                    )
-                                )
-                            if soil_behavior =="silt":
-                                nspt=col4.number_input(
-                                    f"NSPT #{i+1}", min_value=1, key=f"nspt_{i}"
-                                )
-                                layers.append(
-                                    SoilLayer(
-                                        thickness_m=thickness,
-                                        soil_behavior=soil_behavior,
-                                        soil_type=soil_type,
-                                        nspt=nspt
-                                    )
-                                )
-                            if soil_behavior =="sand":
-                                nspt=col4.number_input(
-                                    f"NSPT #{i+1}", min_value=1, key=f"nspt_{i}"
-                                )
-                                layers.append(
-                                    SoilLayer(
-                                        thickness_m=thickness,
-                                        soil_behavior=soil_behavior,
-                                        soil_type=soil_type,
-                                        nspt=nspt
-                                    )
-                                )
-
-                        # MAYERHOF METHOD INPUT
-                        if method=="Mayerhof":
-                            soil_behavior = col2.selectbox(
-                                f"Soil Behavior #{i+1}", options=("clay","sand"), key=f"behavior_{i}"
                             )
-                            if soil_behavior == "clay":
-                                su=col3.number_input(
-                                    f"Su #{i+1} (kPa)", min_value=0.0, format="%.2f", key=f"su_{i}"
+                        if soil_behavior =="silt":
+                            nspt=col4.number_input(
+                                f"NSPT #{i+1}", min_value=1, key=f"nspt_{i}"
+                            )
+                            layers.append(
+                                SoilLayer(
+                                    thickness_m=thickness,
+                                    soil_behavior=soil_behavior,
+                                    soil_type=soil_type,
+                                    nspt=nspt
                                 )
-                                alpha=col4.number_input(
-                                    f"Adhesive Factor, Alpha #{i+1}", min_value=0.0, format="%.2f", key=f"alpha_{i}"
+                            )
+                        if soil_behavior =="sand":
+                            nspt=col4.number_input(
+                                f"NSPT #{i+1}", min_value=1, key=f"nspt_{i}"
+                            )
+                            layers.append(
+                                SoilLayer(
+                                    thickness_m=thickness,
+                                    soil_behavior=soil_behavior,
+                                    soil_type=soil_type,
+                                    nspt=nspt
                                 )
-                                gamma_eff=col1.number_input(
-                                    f"Effective Unit Weight #{i+1} (kN/m3)", min_value=0, key=f"gamma'_{i}"
+                            )
+
+                    # MAYERHOF METHOD INPUT
+                    if method=="Mayerhof":
+                        soil_behavior = col2.selectbox(
+                            f"Soil Behavior #{i+1}", options=("clay","sand"), key=f"behavior_{i}"
+                        )
+                        if soil_behavior == "clay":
+                            su=col3.number_input(
+                                f"Su #{i+1} (kPa)", min_value=0.0, format="%.2f", key=f"su_{i}"
+                            )
+                            alpha=col4.number_input(
+                                f"Adhesive Factor, Alpha #{i+1}", min_value=0.0, format="%.2f", key=f"alpha_{i}"
+                            )
+                            gamma_eff=col1.number_input(
+                                f"Effective Unit Weight #{i+1} (kN/m3)", min_value=0, key=f"gamma'_{i}"
+                            )
+                            layers.append(
+                                SoilLayer(
+                                    thickness_m=thickness,
+                                    soil_behavior=soil_behavior,
+                                    soil_type=soil_behavior,
+                                    su=su,
+                                    alpha_tomlinson=alpha,
+                                    gamma_eff=gamma_eff
                                 )
-                                layers.append(
-                                    SoilLayer(
-                                        thickness_m=thickness,
-                                        soil_behavior=soil_behavior,
-                                        soil_type=soil_behavior,
-                                        su=su,
-                                        alpha_tomlinson=alpha,
-                                        gamma_eff=gamma_eff
-                                    )
-                                )  
-                            if soil_behavior == "sand":
-                                gamma_eff=col3.number_input(
-                                    f"Effective Unit Weight #{i+1} (kN/m3)", min_value=0, key=f"gamma'_{i}"
+                            )  
+                        if soil_behavior == "sand":
+                            gamma_eff=col3.number_input(
+                                f"Effective Unit Weight #{i+1} (kN/m3)", min_value=0, key=f"gamma'_{i}"
+                            )
+                            phi=col4.number_input(
+                                f"Friction Angle #{i+1} (degree)", min_value=0, key=f"phi_{i}"
+                            )
+                            layers.append(
+                                SoilLayer(
+                                    thickness_m=thickness,
+                                    soil_behavior=soil_behavior,
+                                    soil_type=soil_behavior,
+                                    gamma_eff=gamma_eff,
+                                    phi=phi
                                 )
-                                phi=col4.number_input(
-                                    f"Friction Angle #{i+1} (degree)", min_value=0, key=f"phi_{i}"
-                                )
-                                layers.append(
-                                    SoilLayer(
-                                        thickness_m=thickness,
-                                        soil_behavior=soil_behavior,
-                                        soil_type=soil_behavior,
-                                        gamma_eff=gamma_eff,
-                                        phi=phi
-                                    )
-                                )
-            st.divider()
-            run = st.button("Run")
+                            )
+        st.divider()
+        run = st.button("Run")
 
-            if run:
-                try:
-                    # Initialize pile_material for Decourt-Quaresma (not used but needed for function call)
-                    if method == "Decourt-Quaresma":
-                        pile_material = None
-                    
-                    validate_inputs(method, diameter_m, pile_depth_m, cutoff_m, fs, dz, layers)
-                    df, recap = compute_distributions(method, diameter_m, pile_depth_m, cutoff_m, fs, pile_material, pile_types, dz, layers)
-                    # simpan hasil single-pile agar persisten antar rerun
-                    st.session_state["single_df"] = df
-                    st.session_state["single_recap"] = recap
+        if run:
+            try:
+                # Initialize pile_material for Decourt-Quaresma (not used but needed for function call)
+                if method == "Decourt-Quaresma":
+                    pile_material = None
+                
+                validate_inputs(method, diameter_m, pile_depth_m, cutoff_m, fs, dz, layers)
+                df, recap = compute_distributions(method, diameter_m, pile_depth_m, cutoff_m, fs, pile_material, pile_types, dz, layers)
+                # simpan hasil single-pile agar persisten antar rerun
+                st.session_state["single_df"] = df
+                st.session_state["single_recap"] = recap
 
 
-                    st.subheader("Summary")
-                    colA, colB, colC, colD = st.columns(4)
-                    colA.metric("Ab (m²)", f"{recap['Ab_m2']:.4f}")
-                    colA.metric("Perimeter (m)", f"{recap['Perimeter_m']:.3f}")
-                    colB.metric("Pile Length (m)", f"{recap['Pilelength_m']:.2f}")            
-                    colB.metric("Cut-off Pile (m)", f"{recap['Cutoff_m']:.2f}")
-                    colC.metric("Qb @tip (kN)", f"{recap['Qb_at_tip_kN']:.1f}")
-                    colC.metric("Qfs total (kN)", f"{recap['Qfs_total_kN']:.1f}")
-                    colD.metric("Qult total (kN)", f"{recap['Qult_total_kN']:.1f}")
-                    colD.metric("Qall total (kN)", f"{recap['Qall_total_kN']:.1f}")
+                st.subheader("Summary")
+                colA, colB, colC, colD = st.columns(4)
+                colA.metric("Ab (m²)", f"{recap['Ab_m2']:.4f}")
+                colA.metric("Perimeter (m)", f"{recap['Perimeter_m']:.3f}")
+                colB.metric("Pile Length (m)", f"{recap['Pilelength_m']:.2f}")            
+                colB.metric("Cut-off Pile (m)", f"{recap['Cutoff_m']:.2f}")
+                colC.metric("Qb @tip (kN)", f"{recap['Qb_at_tip_kN']:.1f}")
+                colC.metric("Qfs total (kN)", f"{recap['Qfs_total_kN']:.1f}")
+                colD.metric("Qult total (kN)", f"{recap['Qult_total_kN']:.1f}")
+                colD.metric("Qall total (kN)", f"{recap['Qall_total_kN']:.1f}")
 
-                    col1A, col2A = st.columns(2)
-                    plot_height = 800
-                    with col1A:
-                        st.subheader("Depth vs Qall")
-                        fig1 = plot_depth_vs_qall(df)
-                        fig1.update_layout(height=plot_height)
-                        st.plotly_chart(fig1, width="stretch")
+                col1A, col2A = st.columns(2)
+                plot_height = 800
+                with col1A:
+                    st.subheader("Depth vs Qall")
+                    fig1 = plot_depth_vs_qall(df)
+                    fig1.update_layout(height=plot_height)
+                    st.plotly_chart(fig1, width="stretch")
 
-                        st.subheader("Depth vs Qfs, Qb, Qult, Qall")
-                        fig2 = plot_depth_vs_components(df)
-                        fig2.update_layout(height=plot_height)
-                        st.plotly_chart(fig2, width="stretch")
+                    st.subheader("Depth vs Qfs, Qb, Qult, Qall")
+                    fig2 = plot_depth_vs_components(df)
+                    fig2.update_layout(height=plot_height)
+                    st.plotly_chart(fig2, width="stretch")
 
-                    with col2A:
-                        st.subheader("Soil Profile")
-                        fig3 = plot_soil_profile(layers, pile_depth_m, cutoff_m)
-                        fig3.update_layout(height=plot_height)
-                        st.plotly_chart(fig3, width="stretch")
+                with col2A:
+                    st.subheader("Soil Profile")
+                    fig3 = plot_soil_profile(layers, pile_depth_m, cutoff_m)
+                    fig3.update_layout(height=plot_height)
+                    st.plotly_chart(fig3, width="stretch")
 
-                        st.subheader("Summary Data")
-                        st.dataframe(df, width="stretch", height=800, hide_index=True)
-                except Exception as exc:
-                    st.error(str(exc))
+                    st.subheader("Summary Data")
+                    st.dataframe(df, width="stretch", height=800, hide_index=True)
+            except Exception as exc:
+                st.error(str(exc))
 
         else:
             st.subheader(f"Coming Soon, {method}'s Method is Under Developement..")
