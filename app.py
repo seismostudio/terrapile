@@ -2,6 +2,7 @@ from queue import Full
 from typing import List
 from supabase import create_client
 import streamlit as st
+import os
 
 from axpile.models import PileData_alpha, SoilLayer, validate_inputs, SoilBehavior, SoilType, Method
 from axpile.calc import compute_distributions
@@ -11,8 +12,11 @@ from axpile.geometry import (
     compute_pile_tip_area_m2_from_diameter
 )
 # Load your Supabase keys (aman kalau nanti kamu pakai secrets)
-SUPABASE_URL = st.secrets["SUPABASE_URL"]
-SUPABASE_KEY = st.secrets["SUPABASE_KEY"]
+# SUPABASE_URL = st.secrets["SUPABASE_URL"]
+# SUPABASE_KEY = st.secrets["SUPABASE_KEY"]
+
+SUPABASE_URL = os.getenv("SUPABASE_URL")
+SUPABASE_KEY = os.getenv("SUPABASE_KEY")
 
 supabase = create_client(SUPABASE_URL, SUPABASE_KEY)
 
