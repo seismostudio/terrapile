@@ -1,5 +1,6 @@
+from queue import Full
 from typing import List
-
+from supabase import create_client
 import streamlit as st
 
 from axpile.models import PileData_alpha, SoilLayer, validate_inputs, SoilBehavior, SoilType, Method
@@ -9,18 +10,59 @@ from axpile.geometry import (
     compute_pile_perimeter_m_from_diameter,
     compute_pile_tip_area_m2_from_diameter
 )
+# Load your Supabase keys (aman kalau nanti kamu pakai secrets)
+SUPABASE_URL = st.secrets["SUPABASE_URL"]
+SUPABASE_KEY = st.secrets["SUPABASE_KEY"]
+
+supabase = create_client(SUPABASE_URL, SUPABASE_KEY)
+
 
 def main() -> None:
-    st.set_page_config(page_title="Dahar AxPile", layout="wide")
-    st.title("Calculate Axial Bearing Capacity")
+    st.set_page_config(page_title="TerraPile | Pile Bearing Capacity Analysis", layout="wide")
+    st.title("TerraPile")    
+    st.subheader("Calculate Axial Bearing Capacity")
     st.caption("Unit: kPa, m, kN.")
+    st.logo("assets/Logo w name.png", icon_image="assets/Only Logo.png", size="large")
+
+    with st.sidebar:
+        col1, col2 = st.columns(2)
+        with col1.popover("Login", width="stretch"):
+            st.title("Login to TerraPile")
+
+            # Kalau belum login
+            if "user" not in st.session_state:
+                email = st.text_input("Email")
+                password = st.text_input("Password", type="password")
+
+                if st.button("Login"):
+                    try:
+                        res = supabase.auth.sign_in_with_password({
+                            "email": email,
+                            "password": password
+                        })
+                        if res.user:
+                            st.session_state["user"] = res.user
+                            st.success(f"Welcome, {res.user.email}!")
+                            st.rerun()  # <---- penting, supaya tampilan langsung refresh tanpa input login
+                    except Exception as e:
+                        st.error(f"Login failed: {e}")
+
+            # Kalau sudah login
+            else:
+                user = st.session_state["user"]
+                st.success(f"Welcome, {user.email}!")
+                if st.button("Logout"):
+                    supabase.auth.sign_out()
+                    del st.session_state["user"]
+                    st.rerun()
+        col2.link_button("Docs ↗", "https://streamlit.io/gallery", width="stretch")
 
     tab1, tab2 = st.tabs(["Single Pile Analysis","Group Pile Analysis"])
     with tab1:
         pile = list (PileData_alpha.keys())
 
         with st.sidebar:
-
+            st.divider()
             st.header("Analysis Method")
             method = st.selectbox(
                 "Method",
