@@ -154,7 +154,7 @@ def compute_distributions(
         for z_top, lyr in segs:
             z_bot = z_top + lyr.thickness_m
             overlap = max(0.0, min(z_bot, z) - z_top)
-            if method == "mayerhof":
+            if method == "Mayerhof":
                 if overlap > 0 and hasattr(lyr, "gamma_eff"):
                     sum_sigma_eff += lyr.gamma_eff * overlap
 
