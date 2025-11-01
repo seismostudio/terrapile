@@ -243,21 +243,21 @@ def main() -> None:
                         st.subheader("Depth vs Qall")
                         fig1 = plot_depth_vs_qall(df)
                         fig1.update_layout(height=plot_height)
-                        st.plotly_chart(fig1, width="stretch")
+                        st.plotly_chart(fig1, use_container_width=True)
     
                         st.subheader("Depth vs Qfs, Qb, Qult, Qall")
                         fig2 = plot_depth_vs_components(df)
                         fig2.update_layout(height=plot_height)
-                        st.plotly_chart(fig2, width="stretch")
+                        st.plotly_chart(fig2, use_container_width=True)
     
                     with col2A:
                         st.subheader("Soil Profile")
                         fig3 = plot_soil_profile(layers, pile_depth_m, cutoff_m)
                         fig3.update_layout(height=plot_height)
-                        st.plotly_chart(fig3, width="stretch")
+                        st.plotly_chart(fig3, use_container_width=True)
     
                         st.subheader("Summary Data")
-                        st.dataframe(df, width="stretch", height=800, hide_index=True)
+                        st.dataframe(df, use_container_width=True, hide_index=True)
                 except Exception as exc:
                     st.error(str(exc))
 
