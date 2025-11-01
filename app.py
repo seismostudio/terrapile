@@ -257,7 +257,7 @@ def main() -> None:
                         st.plotly_chart(fig3, use_container_width=True)
     
                         st.subheader("Summary Data")
-                        st.dataframe(df, use_container_width=True, hide_index=True)
+                        st.dataframe(df, use_container_width=True, height=800, hide_index=True)
                 except Exception as exc:
                     st.error(str(exc))
 
