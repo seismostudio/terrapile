@@ -239,22 +239,27 @@ def main() -> None:
     
                     col1A, col2A = st.columns(2)
                     plot_height = 800
+                    # Config untuk menonaktifkan zoom dan pan
+                    plot_config = {
+                        "displayModeBar": False,
+                        "staticPlot": False
+                    }
                     with col1A:
                         st.subheader("Depth vs Qall")
                         fig1 = plot_depth_vs_qall(df)
                         fig1.update_layout(height=plot_height)
-                        st.plotly_chart(fig1, use_container_width=True)
+                        st.plotly_chart(fig1, use_container_width=True, config=plot_config)
     
                         st.subheader("Depth vs Qfs, Qb, Qult, Qall")
                         fig2 = plot_depth_vs_components(df)
                         fig2.update_layout(height=plot_height)
-                        st.plotly_chart(fig2, use_container_width=True)
+                        st.plotly_chart(fig2, use_container_width=True, config=plot_config)
     
                     with col2A:
                         st.subheader("Soil Profile")
                         fig3 = plot_soil_profile(layers, pile_depth_m, cutoff_m)
                         fig3.update_layout(height=plot_height)
-                        st.plotly_chart(fig3, use_container_width=True)
+                        st.plotly_chart(fig3, use_container_width=True, config=plot_config)
     
                         st.subheader("Summary Data")
                         st.dataframe(df, use_container_width=True, height=800, hide_index=True)
@@ -301,7 +306,12 @@ def main() -> None:
                     length_m=l_pilecap,
                     pile_diameter_m=st.session_state.get("pile_diameter_m", 0.0),
                 )
-                st.plotly_chart(fig_layout, use_container_width=True)
+                # Config untuk menonaktifkan zoom dan pan
+                plot_config = {
+                    "displayModeBar": False,
+                    "staticPlot": False
+                }
+                st.plotly_chart(fig_layout, use_container_width=True, config=plot_config)
 
         # --- PILE GROUP EFFICIENCY CALCULATION ---
         st.divider()

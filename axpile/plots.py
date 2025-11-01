@@ -10,8 +10,9 @@ def plot_depth_vs_qall(df: pd.DataFrame):
     fig.add_trace(
         go.Scatter(x=df["Qall_kN"], y=df["Depth_m"], mode="lines", name="Qall")
     )
-    fig.update_yaxes(autorange="reversed", title_text="Depth (m)")
-    fig.update_xaxes(title_text="Qall (kN)")
+    fig.update_yaxes(autorange="reversed", title_text="Depth (m)", fixedrange=True)
+    fig.update_xaxes(title_text="Qall (kN)", fixedrange=True)
+    fig.update_layout(dragmode=False)
     return fig
 
 
@@ -29,8 +30,9 @@ def plot_depth_vs_components(df: pd.DataFrame):
     fig.add_trace(
         go.Scatter(x=df["Qall_kN"], y=df["Depth_m"], mode="lines", name="Qall")
     )
-    fig.update_yaxes(autorange="reversed", title_text="Depth (m)")
-    fig.update_xaxes(title_text="Capacity (kN)")
+    fig.update_yaxes(autorange="reversed", title_text="Depth (m)", fixedrange=True)
+    fig.update_xaxes(title_text="Capacity (kN)", fixedrange=True)
+    fig.update_layout(dragmode=False)
     return fig
 
 def plot_pilecap_layout(piles_df: pd.DataFrame, width_m: float, length_m: float, pile_diameter_m: float = 0.0):
@@ -105,11 +107,12 @@ def plot_pilecap_layout(piles_df: pd.DataFrame, width_m: float, length_m: float,
     max_extent = max(w, l) / 2.0
     pad = max_extent * 0.1 + 0.1
     fig.update_layout(
-        xaxis=dict(title="X (m)", range=[x0 - pad, x1 + pad], zeroline=False, showgrid=False, showline=False),
-        yaxis=dict(title="Y (m)", range=[y0 - pad, y1 + pad], zeroline=False, showgrid=False, showline=False, scaleanchor="x", scaleratio=1),
+        xaxis=dict(title="X (m)", range=[x0 - pad, x1 + pad], zeroline=False, showgrid=False, showline=False, fixedrange=True),
+        yaxis=dict(title="Y (m)", range=[y0 - pad, y1 + pad], zeroline=False, showgrid=False, showline=False, scaleanchor="x", scaleratio=1, fixedrange=True),
         margin=dict(l=40, r=10, t=10, b=40),
         height=500,
         showlegend=False,
+        dragmode=False,
     )
     return fig
 
@@ -183,11 +186,12 @@ def plot_soil_profile(layers: List[SoilLayer], pile_depth_m: float, cutoff_m: fl
 
     fig.update_layout(
         annotations=annotations,
-        xaxis=dict(visible=False, range=[0, 1]),
-        yaxis=dict(title="Depth (m)", autorange="reversed", range=[min(cutoff_m,z_bot),0]),
+        xaxis=dict(visible=False, range=[0, 1], fixedrange=True),
+        yaxis=dict(title="Depth (m)", autorange="reversed", range=[min(cutoff_m,z_bot),0], fixedrange=True),
         margin=dict(l=40, r=10, t=10, b=40),
         height=600,
         showlegend=False,
+        dragmode=False,
     )
     return fig
 
