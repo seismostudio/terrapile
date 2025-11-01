@@ -239,12 +239,10 @@ def main() -> None:
     
                     col1A, col2A = st.columns(2)
                     plot_height = 800
-                    # Config untuk menonaktifkan zoom tapi tetap izinkan pan
+                    # Config untuk menonaktifkan zoom dan pan
                     plot_config = {
-                        "modeBarButtonsToRemove": ["zoom2d", "zoomIn2d", "zoomOut2d", "autoScale2d", "resetScale2d"],
-                        "displayModeBar": True,
-                        "scrollZoom": False,
-                        "doubleClick": "reset"
+                        "displayModeBar": False,
+                        "staticPlot": False
                     }
                     with col1A:
                         st.subheader("Depth vs Qall")
@@ -308,12 +306,10 @@ def main() -> None:
                     length_m=l_pilecap,
                     pile_diameter_m=st.session_state.get("pile_diameter_m", 0.0),
                 )
-                # Config untuk menonaktifkan zoom tapi tetap izinkan pan
+                # Config untuk menonaktifkan zoom dan pan
                 plot_config = {
-                    "modeBarButtonsToRemove": ["zoom2d", "zoomIn2d", "zoomOut2d", "autoScale2d", "resetScale2d"],
-                    "displayModeBar": True,
-                    "scrollZoom": False,
-                    "doubleClick": "reset"
+                    "displayModeBar": False,
+                    "staticPlot": False
                 }
                 st.plotly_chart(fig_layout, use_container_width=True, config=plot_config)
 
